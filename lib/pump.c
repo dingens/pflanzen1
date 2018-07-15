@@ -11,7 +11,7 @@
 #define NUM_SENSORS 5
 
 //ID of the water level sensor
-#define ID_WATER_LEVEL_SENSOR 6
+#define ID_WATER_LEVEL_SENSOR COLLECTOR_NODE_ID
 
 //Lowest Humidicity level accepted for the water level sensor
 #define HUMIDICITY_LEVEL_ACCEPTED 80

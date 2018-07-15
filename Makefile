@@ -32,6 +32,7 @@ CFLAGS += -DNODE_ROLE_"$(shell echo $(ROLE) | tr a-z A-Z)"
 # reserved node IDs
 COLLECTOR_NODE_ID ?= ff01
 GATEWAY_NODE_ID ?= ff99
+CFLAGS += -DCOLLECTOR_NODE_ID="(0x$(COLLECTOR_NODE_ID)u)" -DGATEWAY_NODE_ID="(0x$(GATEWAY_NODE_ID)u)"
 
 ifeq ($(ROLE), collector)
 	NODE_ID ?= $(COLLECTOR_NODE_ID)
@@ -43,7 +44,7 @@ ifeq ($(NODE_ID), random)
 else ifeq ($(NODE_ID), device)
 	CFLAGS += -DNODE_ID_DEVICE
 else
-	CFLAGS += -DNODE_ID_="(0x$(NODE_ID))"
+	CFLAGS += -DNODE_ID_="(0x$(NODE_ID)u)"
 endif
 
 PFLANZEN_DEBUG ?= 0
@@ -59,7 +60,7 @@ else ifeq ($(ROLE), collector)
 	UPSTREAM_NODE ?= $(GATEWAY_NODE_ID)
 endif
 ifdef UPSTREAM_NODE
-	CFLAGS += -DUPSTREAM_NODE="(0x$(UPSTREAM_NODE))"
+	CFLAGS += -DUPSTREAM_NODE="(0x$(UPSTREAM_NODE)u)"
 endif
 
 # network configuration

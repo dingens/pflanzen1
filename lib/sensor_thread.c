@@ -2,12 +2,9 @@
 #include "xtimer.h"
 #include "sensor.c"
 
-void *sensor_thread(void *arg)
+void *sensor_thread(void* to_)
 {
-    (void) arg;
-
-// This can only be used when UPSTREAM_NODE is set.
-#ifdef UPSTREAM_NODE
+    nodeid_t to = *(nodeid_t*) to_;
     initialize_sensors();
 
     xtimer_ticks32_t last_wakeup = xtimer_now();
@@ -23,8 +20,6 @@ void *sensor_thread(void *arg)
         }
 
         /* send humidity */
-
-        nodeid_t to = UPSTREAM_NODE;
         nodeid_t source = NODE_ID;
         H2OP_MSGTYPE type = H2OP_DATA_HUMIDITY;
         int16_t netval = htons(res.val[0]);
@@ -33,14 +28,13 @@ void *sensor_thread(void *arg)
         if ( rv <= 0 ) {
             error(0,-rv, "could not send humidity data");
         } else if ( PFLANZEN_DEBUG ) {
-            puts("humidity data sent");
+            printf("humidity data sent (%"PRIu16")\n", res.val[0]);
         }
 
         /* wakes up periodically, this should get us the interval */
         /* as long as it is longer as we take for our measurements */
         xtimer_periodic_wakeup(&last_wakeup, MEASUREMENT_INTERVAL);
     }
-#endif
 
     return NULL;
 }
