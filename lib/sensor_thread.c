@@ -1,6 +1,7 @@
 #include "thread.h"
 #include "xtimer.h"
 #include "sensor.c"
+#include <math.h>
 
 void *sensor_thread(void* to_)
 {
@@ -19,10 +20,22 @@ void *sensor_thread(void* to_)
             }
         }
 
+        float valf = res.val[0] * pow(10, res.scale);
+        int16_t val;
+        if ( valf > (INT16_MAX) ) {
+            error(0,0, "Humidity value too high for int16, truncating");
+            val = INT16_MAX;
+        } else if ( valf < INT16_MIN ) {
+            error(0,0, "Humidity value too low for int16, truncating");
+            val = INT16_MIN;
+        } else {
+            val = (int16_t) valf;
+        }
+
         /* send humidity */
         nodeid_t source = NODE_ID;
         H2OP_MSGTYPE type = H2OP_DATA_HUMIDITY;
-        int16_t netval = htons(res.val[0]);
+        int16_t netval = htons(val);
 
         int rv = h2op_send(to, type, (uint8_t*) &netval, sizeof(res.val[0]), source);
         if ( rv <= 0 ) {
