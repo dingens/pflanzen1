@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include "mbox.h"
+#include "network.h"
 
 
 //Number of sensors
@@ -56,6 +57,10 @@ void print_table( int table[][3])
 //Function that activates the USB Port of the board
 void make_pump_open(void)
 {
+#ifdef UPSTREAM_NODE
+    uint8_t status = 1;
+    h2op_send(UPSTREAM_NODE, H2OP_INFO_PUMP_STATUS, &status, 1, NODE_ID);
+#endif
 
 printf("OPEN PUMP \n");
 }
@@ -63,6 +68,10 @@ printf("OPEN PUMP \n");
 //Function that shutdown the USB Port of the board
 void make_pump_close(void)
 {
+#ifdef UPSTREAM_NODE
+    uint8_t status = 0;
+    h2op_send(UPSTREAM_NODE, H2OP_INFO_PUMP_STATUS, &status, 1, NODE_ID);
+#endif
 
 printf("CLOSE PUMP \n");
 }

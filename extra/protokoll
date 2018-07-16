@@ -40,6 +40,7 @@ Header format
                 0x9a contradictory humidity values encountered
                 0x9b sensor doesn't send data
             0xA? INFO
+                0xa1 pump status
                 0xa9 pump bucket nearly empty
         all other values:
             reserved for later use. packet MUST be discarded.
@@ -65,3 +66,4 @@ Data Format
 11  0   Temperature (signed 16bit integer)
 12  0   Humidity (signed 16bit integer)
 31  0   interval in seconds (unsigned 32 bit integer)
+a1  0   pump status (unsigned 8bit int that can only be 0 or 1)

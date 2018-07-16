@@ -360,6 +360,11 @@ void h2op_debug_hook (H2OP_MSGTYPE type, nodeid_t source,
             uint32_t interval = ntohl(* (uint32_t*) data);
             printf("Interval: %"PRIu32"\n", interval);
             return;
+        case H2OP_INFO_PUMP_STATUS:
+            if (len != 1) break;
+            uint8_t status = * (uint8_t*) data;
+            if (status != 0 && status != 1) break;
+            printf("Pump status: %s", status ? "on" : "off");
         default:
             // avoid "blabla not handled in switch" error
             break;
